@@ -1,0 +1,52 @@
+// No need for React import in this data file
+import { Template } from '../types/template';
+import { TorontoTemplate } from '../components/templates/TorontoTemplate';
+import { StockholmTemplate } from '../components/templates/StockholmTemplate';
+
+// Template thumbnails would normally be imported from assets
+// For now we'll use base64 placeholders representing the designs
+const torontoThumbnail = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEwIiBoZWlnaHQ9IjI5NyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjEwIiBoZWlnaHQ9IjI5NyIgZmlsbD0iI2ZmZiIvPjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjE3MCIgaGVpZ2h0PSI0MCIgZmlsbD0iIzMzMzMzMyIvPjxyZWN0IHg9IjIwIiB5PSI3MCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgiIGZpbGw9IiM1NTU1NTUiLz48cmVjdCB4PSIyMCIgeT0iODUiIHdpZHRoPSIxNzAiIGhlaWdodD0iMiIgZmlsbD0iIzY2ZTg3MiIvPjxyZWN0IHg9IjIwIiB5PSIxMDAiIHdpZHRoPSI4MCIgaGVpZ2h0PSIyMCIgZmlsbD0iIzY2ZTg3MiIvPjxyZWN0IHg9IjExMCIgeT0iMTAwIiB3aWR0aD0iODAiIGhlaWdodD0iNCIgZmlsbD0iIzU1NTU1NSIvPjxyZWN0IHg9IjExMCIgeT0iMTEwIiB3aWR0aD0iODAiIGhlaWdodD0iNCIgZmlsbD0iIzU1NTU1NSIvPjxyZWN0IHg9IjIwIiB5PSIxNTAiIHdpZHRoPSIxNzAiIGhlaWdodD0iNCIgZmlsbD0iIzU1NTU1NSIvPjxyZWN0IHg9IjIwIiB5PSIxNjAiIHdpZHRoPSIxNzAiIGhlaWdodD0iNCIgZmlsbD0iIzU1NTU1NSIvPjxyZWN0IHg9IjIwIiB5PSIxNzAiIHdpZHRoPSIxNzAiIGhlaWdodD0iNCIgZmlsbD0iIzU1NTU1NSIvPjxyZWN0IHg9IjIwIiB5PSIxODAiIHdpZHRoPSIxNzAiIGhlaWdodD0iNCIgZmlsbD0iIzU1NTU1NSIvPjwvc3ZnPg==';
+const stockholmThumbnail = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEwIiBoZWlnaHQ9IjI5NyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjEwIiBoZWlnaHQ9IjI5NyIgZmlsbD0iI2ZmZiIvPjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjExMCIgaGVpZ2h0PSI0MCIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjMDA4N2ZmIiBzdHJva2Utd2lkdGg9IjIiLz48cmVjdCB4PSIxNDAiIHk9IjIwIiB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIGZpbGw9IiMwMDg3ZmYiIHJ4PSIyNSIgcnk9IjI1Ii8+PHJlY3QgeD0iMjAiIHk9IjcwIiB3aWR0aD0iODAiIGhlaWdodD0iOCIgZmlsbD0iIzU1NTU1NSIvPjxyZWN0IHg9IjIwIiB5PSI5MCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjZmZmIiBzdHJva2U9IiMwMDg3ZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxyZWN0IHg9IjExMCIgeT0iOTAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI0IiBmaWxsPSIjNTU1NTU1Ii8+PHJlY3QgeD0iMTEwIiB5PSIxMDAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI0IiBmaWxsPSIjNTU1NTU1Ii8+PHJlY3QgeD0iMjAiIHk9IjEzMCIgd2lkdGg9IjE3MCIgaGVpZ2h0PSI0IiBmaWxsPSIjMDA4N2ZmIi8+PHJlY3QgeD0iMjAiIHk9IjE1MCIgd2lkdGg9IjE3MCIgaGVpZ2h0PSI0IiBmaWxsPSIjNTU1NTU1Ii8+PHJlY3QgeD0iMjAiIHk9IjE2MCIgd2lkdGg9IjE3MCIgaGVpZ2h0PSI0IiBmaWxsPSIjNTU1NTU1Ii8+PHJlY3QgeD0iMjAiIHk9IjE3MCIgd2lkdGg9IjE3MCIgaGVpZ2h0PSI0IiBmaWxsPSIjNTU1NTU1Ii8+PC9zdmc+';
+const corporateThumbnail = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEwIiBoZWlnaHQ9IjI5NyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjEwIiBoZWlnaHQ9IjI5NyIgZmlsbD0iI2ZmZiIvPjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjE3MCIgaGVpZ2h0PSIyIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjAiIHk9IjI1IiB3aWR0aD0iOTAiIGhlaWdodD0iMjAiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMCIgeT0iNTUiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2IiBmaWxsPSIjNTU1Ii8+PHJlY3QgeD0iMjAiIHk9IjgwIiB3aWR0aD0iMTcwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjZjhmOGY4Ii8+PHJlY3QgeD0iMjUiIHk9Ijg1IiB3aWR0aD0iODAiIGhlaWdodD0iOCIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjI1IiB5PSI5NyIgd2lkdGg9IjE2MCIgaGVpZ2h0PSI0IiBmaWxsPSIjNTU1Ii8+PHJlY3QgeD0iMjAiIHk9IjEyMCIgd2lkdGg9IjE3MCIgaGVpZ2h0PSIzMCIgZmlsbD0iI2Y4ZjhmOCIvPjxyZWN0IHg9IjI1IiB5PSIxMjUiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4IiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjUiIHk9IjEzNyIgd2lkdGg9IjE2MCIgaGVpZ2h0PSI0IiBmaWxsPSIjNTU1Ii8+PC9zdmc+';  
+const clearThumbnail = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEwIiBoZWlnaHQ9IjI5NyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjEwIiBoZWlnaHQ9IjI5NyIgZmlsbD0iI2ZmZiIvPjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjMDBmNGExIiByeD0iNCIgcnk9IjQiLz48cmVjdCB4PSIxMTAiIHk9IjIwIiB3aWR0aD0iODAiIGhlaWdodD0iNCIgZmlsbD0iIzU1NTU1NSIvPjxyZWN0IHg9IjExMCIgeT0iMzAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI0IiBmaWxsPSIjNTU1NTU1Ii8+PHJlY3QgeD0iMTEwIiB5PSI0MCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjQiIGZpbGw9IiM1NTU1NTUiLz48cmVjdCB4PSIxMTAiIHk9IjUwIiB3aWR0aD0iODAiIGhlaWdodD0iNCIgZmlsbD0iIzU1NTU1NSIvPjxyZWN0IHg9IjExMCIgeT0iNjAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI0IiBmaWxsPSIjNTU1NTU1Ii8+PHJlY3QgeD0iMjAiIHk9IjEyMCIgd2lkdGg9IjE3MCIgaGVpZ2h0PSI0IiBmaWxsPSIjMDBmNGExIi8+PHJlY3QgeD0iMjAiIHk9IjE0MCIgd2lkdGg9IjE3MCIgaGVpZ2h0PSI0IiBmaWxsPSIjNTU1NTU1Ii8+PHJlY3QgeD0iMjAiIHk9IjE1MCIgd2lkdGg9IjE3MCIgaGVpZ2h0PSI0IiBmaWxsPSIjNTU1NTU1Ii8+PHJlY3QgeD0iMjAiIHk9IjE2MCIgd2lkdGg9IjE3MCIgaGVpZ2h0PSI0IiBmaWxsPSIjNTU1NTU1Ii8+PC9zdmc+';
+
+// Define available templates
+export const templates: Template[] = [
+  {
+    id: 'toronto',
+    name: 'Toronto',
+    component: TorontoTemplate,
+    thumbnail: torontoThumbnail,
+    supportedFormats: ['PDF', 'DOCX']
+  },
+  {
+    id: 'stockholm',
+    name: 'Stockholm',
+    component: StockholmTemplate,
+    thumbnail: stockholmThumbnail,
+    supportedFormats: ['PDF', 'DOCX']
+  },
+  {
+    id: 'corporate',
+    name: 'Corporate',
+    component: TorontoTemplate, // Reusing existing template component for demo
+    thumbnail: corporateThumbnail,
+    supportedFormats: ['PDF']
+  },
+  {
+    id: 'clear',
+    name: 'Clear',
+    component: StockholmTemplate, // Reusing existing template component for demo
+    thumbnail: clearThumbnail,
+    supportedFormats: ['PDF']
+  }
+];
+
+// Helper function to get a template by ID
+export const getTemplateById = (id: string): Template => {
+  const template = templates.find(t => t.id === id);
+  if (!template) {
+    return templates[0]; // Default to first template if not found
+  }
+  return template;
+};
