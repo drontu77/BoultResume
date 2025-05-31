@@ -10,7 +10,7 @@ const useNavigate = () => {
 // Placeholder SVG for Logo
 const LogoIcon = () => (
   <svg
-    className="w-8 h-8 text-blue-600"
+    className="w-9 h-9 text-blue-600" // Slightly larger logo icon
     fill="none"
     viewBox="0 0 24 24"
     stroke="currentColor"
@@ -57,21 +57,43 @@ const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false); // Kept for potential future use, but not for navbar bg/shadow
+  const [currentHeroImageIndex, setCurrentHeroImageIndex] = useState(0);
+
+  // Placeholder image URL generator
+  const placeholderImg = (width: number, height: number, text: string = "Placeholder", bgColor: string = "e2e8f0", textColor: string = "94a3b8") => 
+    `https://placehold.co/${width}x${height}/${bgColor}/${textColor}?text=${encodeURIComponent(text)}&font=lora`;
+
+  // Array of 5 resume image placeholders for the hero section
+  const heroImages = [
+    placeholderImg(210, 297, "Resume 1", "dbeafe", "1e3a8a"), // Light blue bg, dark blue text
+    placeholderImg(210, 297, "Resume 2", "fee2e2", "991b1b"), // Light red bg, dark red text
+    placeholderImg(210, 297, "Resume 3", "d1fae5", "065f46"), // Light green bg, dark green text
+    placeholderImg(210, 297, "Resume 4", "fef3c7", "92400e"), // Light yellow bg, dark yellow text
+    placeholderImg(210, 297, "Resume 5", "e0e7ff", "3730a3"), // Light indigo bg, dark indigo text
+  ];
 
   // Effect for initial page load animation
   useEffect(() => {
     setIsVisible(true);
   }, []);
 
-  // Effect for tracking scroll position to change navbar style
+  // Effect for tracking scroll position (can be used for other subtle effects if needed)
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50); // Adjust 50 to when you want the navbar to change
+      setIsScrolled(window.scrollY > 20); 
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Effect for hero image rotation
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentHeroImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
+    }, 3500); // Change image every 3.5 seconds
+    return () => clearInterval(intervalId);
+  }, [heroImages.length]);
 
 
   // Common animation variants
@@ -82,14 +104,14 @@ const LandingPage: React.FC = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        staggerChildren: 0.1,
+        staggerChildren: 0.15, 
       },
     },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
+    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }, 
   };
 
   // Data for stats
@@ -101,130 +123,114 @@ const LandingPage: React.FC = () => {
 
   const currentYear = new Date().getFullYear();
 
-  // Placeholder image URL - replace with your actual image or a service like placehold.co
-  const placeholderImg = (width: number, height: number, text: string = "Placeholder") => `https://placehold.co/${width}x${height}/e2e8f0/94a3b8?text=${encodeURIComponent(text)}`;
-
-
   return (
-    <div className="landing-page bg-slate-50 font-sans"> {/* Added a light background to body */}
+    <div className="landing-page bg-slate-100 font-sans antialiased"> 
       {/* ============================
             Header / Hero Section
          ============================ */}
       {/* Navbar */}
       <motion.nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out 
-                    ${isScrolled || mobileMenuOpen ? 'bg-white/80 backdrop-blur-md shadow-lg' : 'bg-transparent shadow-none'}
-                    py-3`} // Adjusted padding
-        initial={{ y: -100, opacity: 0 }}
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out bg-white/95 backdrop-blur-md shadow-lg py-4" // Always white, floating with blur and shadow
+        initial={{ y: -120, opacity: 0 }} 
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: "circOut" }} 
       >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between"> {/* Consistent padding */}
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           {/* Logo */}
           <motion.div
-            className="logo flex items-center gap-2 cursor-pointer"
+            className="logo flex items-center gap-2.5 cursor-pointer" 
             onClick={() => navigate('/')}
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: 'spring', stiffness: 400 }}
+            whileHover={{ scale: 1.03, rotate: -2 }} 
+            transition={{ type: 'spring', stiffness: 300 }}
           >
             <LogoIcon />
-            <span className="text-xl font-bold text-slate-800">ResumeBuilder</span> {/* Darker text for better contrast */}
+            <span className="text-2xl font-bold text-slate-800 tracking-tight">Resume<span className="text-blue-600">Builder</span></span> 
           </motion.div>
 
           {/* Desktop Links */}
-          <div className="nav-links hidden md:flex items-center space-x-6 lg:space-x-8"> {/* Adjusted spacing */}
+          <div className="nav-links hidden md:flex items-center space-x-5 lg:space-x-7"> 
             {['Features', 'Templates', 'Pricing', 'About'].map((item, idx) => (
               <motion.a
                 key={item}
                 href={`#${item.toLowerCase()}`}
-                className="text-slate-600 hover:text-blue-600 transition-colors duration-200 font-medium" // Enhanced styling
-                whileHover={{ scale: 1.05, y: -2 }}
-                initial={{ opacity: 0, y: -20 }}
+                className="text-slate-700 hover:text-blue-600 transition-colors duration-200 font-semibold text-sm relative group" 
+                whileHover={{ y: -1 }}
+                initial={{ opacity: 0, y: -15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.1 + 0.3 }} // Staggered animation
+                transition={{ delay: idx * 0.1 + 0.4, type: "spring", stiffness: 120 }}
               >
                 {item}
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center"></span> 
               </motion.a>
             ))}
-
             <motion.button
-              className="px-5 py-2 text-blue-600 font-medium border border-blue-600 rounded-lg hover:bg-blue-50 hover:shadow-md transition-all duration-200" // Enhanced styling
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="ml-2 px-5 py-2.5 text-sm text-blue-600 font-semibold border-2 border-blue-600 rounded-lg hover:bg-blue-50 hover:shadow-lg transition-all duration-200"
+              whileHover={{ scale: 1.03, y: -1 }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => navigate('/signin')}
+              initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.8, type: "spring", stiffness: 120 }}
             >
               Sign In
             </motion.button>
-
             <motion.button
-              className="px-5 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 shadow-md hover:shadow-lg transition-all duration-200" // Enhanced styling
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="px-5 py-2.5 text-sm bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-200"
+              whileHover={{ scale: 1.03, y: -1 }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => navigate('/signup')}
+              initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.9, type: "spring", stiffness: 120 }}
             >
-              Get Started
+              Get Started Free
             </motion.button>
           </div>
 
           {/* Mobile Hamburger */}
           <div className="md:hidden">
             <button
-              className="p-2 text-slate-700 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md" // Added focus offset
+              className="p-2.5 text-slate-700 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md"
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
               ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16M4 18h16" /></svg>
               )}
             </button>
           </div>
         </div>
         
-        {/* Mobile Menu (conditionally rendered with AnimatePresence) */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
-              className="mobile-menu md:hidden bg-white shadow-xl absolute top-full left-0 right-0" // Full width, shadow
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="mobile-menu md:hidden bg-white shadow-2xl absolute top-full left-0 right-0 border-t border-slate-200"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.35, ease: "circInOut" }}
             >
-              <div className="flex flex-col px-4 pt-2 pb-4 space-y-3"> {/* Adjusted padding and spacing */}
+              <div className="flex flex-col px-5 pt-3 pb-5 space-y-2">
                 {['Features', 'Templates', 'Pricing', 'About'].map((item) => (
                   <a
                     key={item}
                     href={`#${item.toLowerCase()}`}
-                    className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-200"
+                    className="block px-3 py-2.5 rounded-md text-base font-semibold text-slate-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-200"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {item}
                   </a>
                 ))}
-                <hr className="my-2 border-slate-200" />
+                <hr className="my-3 border-slate-200" />
                 <button
-                  className="w-full px-4 py-3 text-blue-600 font-medium border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors duration-200 text-left" // Full width, text-left
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    navigate('/signin');
-                  }}
+                  className="w-full px-4 py-3 text-blue-600 font-semibold border-2 border-blue-600 rounded-lg hover:bg-blue-50 transition-colors duration-200 text-center"
+                  onClick={() => { setMobileMenuOpen(false); navigate('/signin'); }}
                 >
                   Sign In
                 </button>
                 <button
-                  className="w-full px-4 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 text-left" // Full width, text-left
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    navigate('/signup');
-                  }}
+                  className="w-full px-4 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 text-center"
+                  onClick={() => { setMobileMenuOpen(false); navigate('/signup'); }}
                 >
-                  Get Started
+                  Get Started Free
                 </button>
               </div>
             </motion.div>
@@ -233,113 +239,114 @@ const LandingPage: React.FC = () => {
       </motion.nav>
 
       <motion.header
-        className="hero pt-28 pb-16 md:pt-36 md:pb-24 bg-gradient-to-br from-blue-600 to-indigo-700 text-white" // Added gradient, adjusted padding for fixed nav
+        className="hero pt-32 pb-20 md:pt-40 md:pb-28 bg-gradient-to-br from-blue-700 via-indigo-700 to-purple-700 text-white overflow-hidden" 
         initial="hidden"
         animate={isVisible ? 'visible' : 'hidden'}
         variants={containerVariants}
       >
-        {/* Hero Content */}
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col-reverse md:flex-row items-center gap-8 md:gap-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-10 md:gap-16">
           {/* Left: Text + Stats */}
-          <motion.div className="hero-text w-full md:w-3/5 lg:w-1/2 text-center md:text-left" variants={containerVariants}>
+          <motion.div className="hero-text w-full md:w-3/5 lg:w-[55%] text-center md:text-left" variants={containerVariants}>
             <motion.h1
               variants={itemVariants}
-              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight relative" // Bolder font
+              className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold leading-tight tracking-tighter relative" 
             >
-              Get Hired at{' '}
-              <span className="relative inline-block">
-                Top Companies
-                <motion.span
-                  className="absolute -bottom-2 left-0 w-full h-2 bg-yellow-400 -z-10" // Changed underline color for contrast
-                  initial={{ width: 0 }}
-                  animate={{ width: '100%' }}
-                  transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-                />
+              Craft Your Future:
+              <br className="hidden sm:block" />
+              <span className="relative inline-block mt-1">
+                AI-Powered Resumes
+                <motion.svg
+                  className="absolute -bottom-2.5 left-0 w-full h-4 -z-10"
+                  viewBox="0 0 200 20" preserveAspectRatio="none"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: 1, opacity: 1 }}
+                  transition={{ duration: 1, delay: 0.7, ease: "circOut" }}
+                >
+                  <path d="M0 10 Q50 2, 100 10 T200 10" stroke="#FFD700" strokeWidth="4" fill="transparent" />
+                </motion.svg>
               </span>
             </motion.h1>
 
             <motion.p
               variants={itemVariants}
-              className="mt-6 text-lg sm:text-xl text-blue-100 max-w-xl mx-auto md:mx-0" // Lighter text for contrast on dark bg
+              className="mt-6 text-md sm:text-lg text-blue-100 max-w-lg mx-auto md:mx-0 leading-relaxed"
             >
-              Stand out from the crowd with AI-powered resume building. Create ATS-optimized
-              resumes with professional templates and expert advice.
+              Build standout, ATS-friendly resumes in minutes. Leverage AI insights and professional templates to land your dream job faster.
             </motion.p>
 
             <motion.div
-              className="mt-10 flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
+              className="mt-10 flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center md:justify-start"
               variants={itemVariants}
             >
               <motion.button
-                className="px-8 py-4 bg-yellow-400 text-blue-700 rounded-lg font-bold text-lg shadow-lg hover:bg-yellow-300 transition-colors duration-200 flex items-center justify-center gap-2" // Contrasting button
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: '0 10px 20px rgba(0,0,0,0.15)', // Softer shadow
-                }}
-                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-yellow-400 text-blue-800 rounded-xl font-bold text-lg shadow-xl hover:bg-yellow-300 focus:ring-4 focus:ring-yellow-300/50 transition-all duration-200 flex items-center justify-center gap-2.5 transform hover:scale-105"
+                whileTap={{ scale: 0.98 }}
                 onClick={() => navigate('/build-resume')}
-                aria-label="Build My Resume"
+                aria-label="Build My Resume Now"
               >
-                Build My Resume
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
+                Build My Resume Now
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
               </motion.button>
-
               <motion.button
-                className="px-8 py-4 border-2 border-blue-300 text-white rounded-lg font-medium text-lg hover:bg-white hover:text-blue-700 transition-all duration-200 flex items-center justify-center gap-2" // Adjusted for dark bg
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 border-2 border-blue-300/70 text-white rounded-xl font-semibold text-lg hover:bg-white/10 hover:border-white transition-all duration-200 flex items-center justify-center gap-2.5 transform hover:scale-105"
+                whileTap={{ scale: 0.98 }}
                 onClick={() => navigate('/templates')}
-                aria-label="View Templates"
+                aria-label="Explore Templates"
               >
-                View Templates
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                Explore Templates
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" /></svg>
               </motion.button>
             </motion.div>
 
-            {/* Stats Row */}
             <motion.div
-              className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8"
+              className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-5 md:gap-6"
               variants={containerVariants}
             >
               {stats.map((stat, index) => (
                 <motion.div
                   key={stat.label}
-                  className="text-center p-4 bg-white/10 rounded-lg backdrop-blur-sm" // Frosted glass effect for stats
+                  className="text-center p-4 bg-white/15 rounded-xl backdrop-blur-md shadow-lg"
                   variants={itemVariants}
-                  whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.2)'}}
+                  whileHover={{ scale: 1.03, backgroundColor: 'rgba(255,255,255,0.25)'}}
                   transition={{ duration: 0.2 }}
                 >
                   <motion.div
-                    className="text-4xl font-bold text-yellow-400" // Contrasting color
+                    className="text-3xl lg:text-4xl font-bold text-yellow-400"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.2 + 0.7, ease: "easeOut" }}
+                    transition={{ delay: index * 0.2 + 0.9, ease: "circOut" }}
                   >
                     {stat.number}
                   </motion.div>
-                  <div className="text-blue-100 mt-2 text-sm">{stat.label}</div>
+                  <div className="text-blue-100 mt-1.5 text-xs sm:text-sm font-medium">{stat.label}</div>
                 </motion.div>
               ))}
             </motion.div>
           </motion.div>
 
-          {/* Right: Hero Image */}
+          {/* Right: Hero Image - A4 Aspect Ratio with Rotation */}
           <motion.div
-            className="hero-image w-full md:w-2/5 lg:w-1/2 mt-8 md:mt-0"
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+            className="hero-image-container w-full md:w-2/5 lg:w-[40%] mt-10 md:mt-0 flex justify-center items-center"
+            initial={{ opacity: 0, scale: 0.8, rotateY: -30 }}
+            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: "circOut" }}
+            style={{ perspective: '1000px' }} 
           >
-            <img
-              src={placeholderImg(600, 450, "Resume Preview")} // Placeholder
-              alt="Resume Preview"
-              className="w-full h-auto rounded-xl shadow-2xl object-cover" // Enhanced styling
-              onError={(e) => (e.currentTarget.src = placeholderImg(600, 450, "Error Loading Image"))}
-            />
+            <div className="relative w-[210px] h-[297px] sm:w-[240px] sm:h-[339px] md:w-[210px] md:h-[297px] lg:w-[250px] lg:h-[353px]"> 
+              <AnimatePresence mode="sync">
+                <motion.img
+                  key={currentHeroImageIndex}
+                  src={heroImages[currentHeroImageIndex]}
+                  alt={`Resume Example ${currentHeroImageIndex + 1}`}
+                  className="absolute inset-0 w-full h-full object-cover rounded-lg shadow-2xl border-2 border-white/20"
+                  initial={{ opacity: 0, rotateY: 90, scale: 0.9 }}
+                  animate={{ opacity: 1, rotateY: 0, scale: 1 }}
+                  exit={{ opacity: 0, rotateY: -90, scale: 0.9 }}
+                  transition={{ duration: 0.7, ease: 'easeInOut' }}
+                  onError={(e) => (e.currentTarget.src = placeholderImg(210, 297, "Error"))}
+                />
+              </AnimatePresence>
+            </div>
           </motion.div>
         </div>
       </motion.header>
@@ -347,7 +354,7 @@ const LandingPage: React.FC = () => {
       {/* ============================
             Features Section
          ============================ */}
-      <section id="features" className="features py-16 lg:py-24 bg-white"> {/* Increased padding */}
+      <section id="features" className="features py-16 lg:py-24 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section-heading text-center mb-12 lg:mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-slate-800">Powerful Features to Build Your Career</h2>
@@ -359,8 +366,8 @@ const LandingPage: React.FC = () => {
             className="feature-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
             variants={containerVariants}
             initial="hidden"
-            whileInView="visible" // Animate when in view
-            viewport={{ once: true, amount: 0.3 }} // Trigger animation once, when 30% is visible
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
           >
             {[
               { title: "AI-Powered Content", desc: "Get tailored suggestions for skills, achievements, and job descriptions.", Icon: FeatureAiIcon },
@@ -372,7 +379,7 @@ const LandingPage: React.FC = () => {
                 key={index} 
                 className="feature-card p-6 bg-slate-50 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center flex flex-col items-center"
                 variants={itemVariants}
-                whileHover={{ y: -5 }} // Subtle lift on hover
+                whileHover={{ y: -5 }}
               >
                 <div className="mb-5 p-3 bg-blue-100 rounded-full"> <feature.Icon /> </div>
                 <h3 className="text-xl font-semibold mb-2 text-slate-700">{feature.title}</h3>
@@ -386,7 +393,7 @@ const LandingPage: React.FC = () => {
       {/* ============================
             Templates Preview Section
          ============================ */}
-      <section id="templates" className="templates-preview py-16 lg:py-24 bg-slate-100"> {/* Alternating background */}
+      <section id="templates" className="templates-preview py-16 lg:py-24 bg-slate-100">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section-heading text-center mb-12 lg:mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-slate-800">Professional Templates for Every Career Stage</h2>
@@ -405,12 +412,12 @@ const LandingPage: React.FC = () => {
             {['Professional', 'Creative', 'Executive', 'Modern'].map((templateName, index) => (
               <motion.div 
                 key={index} 
-                className="template text-center group" // Added group for hover effects on children
+                className="template text-center group"
                 variants={itemVariants}
               >
                 <div className="template-card overflow-hidden rounded-xl shadow-lg mb-4 border-4 border-transparent group-hover:border-blue-500 transition-all duration-300 transform group-hover:scale-105">
                   <img
-                    src={placeholderImg(300, 400, `${templateName} Template`)} // Placeholder
+                    src={placeholderImg(300, 400, `${templateName} Template`)}
                     alt={`${templateName} Template`}
                     className="w-full h-auto object-cover"
                     onError={(e) => (e.currentTarget.src = placeholderImg(300, 400, "Image Error"))}
@@ -429,7 +436,7 @@ const LandingPage: React.FC = () => {
             transition={{delay: 0.5}}
           >
             <button
-              className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md hover:shadow-lg text-lg" // Enhanced button
+              className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 shadow-md hover:shadow-lg text-lg"
               onClick={() => navigate('/templates')}
             >
               View All Templates
@@ -451,7 +458,7 @@ const LandingPage: React.FC = () => {
           </div>
 
           <motion.div 
-            className="pricing-cards grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch" // items-stretch for equal height cards
+            className="pricing-cards grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -483,7 +490,7 @@ const LandingPage: React.FC = () => {
 
             {/* Premium Plan */}
             <motion.div 
-              className="pricing-card bg-blue-600 text-white rounded-xl shadow-2xl p-6 lg:p-8 flex flex-col relative transform md:scale-105" // Highlighted plan
+              className="pricing-card bg-blue-600 text-white rounded-xl shadow-2xl p-6 lg:p-8 flex flex-col relative transform md:scale-105"
               variants={itemVariants}
               whileHover={{ y: -5 }}
             >
@@ -541,18 +548,15 @@ const LandingPage: React.FC = () => {
       <footer className="footer bg-slate-800 text-slate-300 py-12 lg:py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
-            {/* Logo / Branding & About */}
             <div className="lg:col-span-2">
               <div className="footer-logo flex items-center gap-3 mb-4">
-                <LogoIcon /> {/* Using the SVG icon */}
-                <span className="text-2xl font-bold text-white">ResumeBuilder</span>
+                <LogoIcon />
+                <span className="text-2xl font-bold text-white">Resume<span className="text-blue-400">Builder</span></span>
               </div>
               <p className="text-sm text-slate-400 max-w-md">
                 Helping you craft the perfect resume to land your dream job. AI-powered, professionally designed, and ATS-friendly.
               </p>
             </div>
-
-            {/* Footer Links */}
             {[
               { title: 'Product', links: [{label: 'Features', href:'#features'}, {label: 'Templates', href:'#templates'}, {label:'Pricing', href:'#pricing'}] },
               { title: 'Resources', links: [{label: 'Blog', href:'/blog'}, {label: 'Resume Tips', href:'/tips'}, {label: 'Career Advice', href:'/advice'}] },
@@ -572,7 +576,6 @@ const LandingPage: React.FC = () => {
               </div>
             ))}
           </div>
-
           <div className="mt-8 border-t border-slate-700 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
             <p className="text-slate-400">&copy; {currentYear} ResumeBuilder. All rights reserved.</p>
             <div className="social-links flex items-center space-x-5 mt-4 md:mt-0">
@@ -594,30 +597,30 @@ const LandingPage: React.FC = () => {
   );
 };
 
-
-// It's good practice to have a root App component
 const App = () => {
-  // If you were using React Router, you'd wrap LandingPage with <BrowserRouter> here.
-  // For this standalone example, we'll just render LandingPage.
   return (
     <>
-      {/* Include Tailwind CSS. In a real project, this is usually in index.html or imported in index.js */}
       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
       <style jsx global>{`
         body {
-          font-family: 'Inter', sans-serif; /* Example: Using Inter font */
+          font-family: 'Inter', sans-serif;
         }
-        /* Add any global styles or overrides here if needed */
-        .hero { /* Keep this if you have specific hero background images/styles in CSS */
-          /* background: url(...) or other styles */
+        /* Custom wavy underline SVG */
+        .hero-underline-svg path {
+          stroke-dasharray: 1000; /* A large number */
+          stroke-dashoffset: 1000;
+          animation: draw-underline 1s ease-out 0.7s forwards;
         }
-        /* You might have .feature-icon styles in your CSS, 
-           I've replaced them with inline SVGs above for portability */
+        @keyframes draw-underline {
+          to {
+            stroke-dashoffset: 0;
+          }
+        }
       `}</style>
-       <script src="https://cdn.tailwindcss.com"></script> {/* Ensure Tailwind is loaded */}
+       <script src="https://cdn.tailwindcss.com"></script>
       <LandingPage />
     </>
   );
 };
 
-export default App; // Export App as the default
+export default App;
