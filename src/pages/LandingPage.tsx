@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { FileText, Briefcase, Award, Download, ChevronRight, Menu, X } from 'lucide-react';
+import AuthModal from '../components/auth/AuthModal';
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,6 +34,11 @@ const LandingPage = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleAuth = (mode: 'signin' | 'signup') => {
+    setAuthMode(mode);
+    setShowAuthModal(true);
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -99,7 +107,7 @@ const LandingPage = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate('/signin')}
+                onClick={() => handleAuth('signin')}
               >
                 Sign In
               </motion.button>
@@ -109,7 +117,7 @@ const LandingPage = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate('/signup')}
+                onClick={() => handleAuth('signup')}
               >
                 Get Started
               </motion.button>
@@ -150,13 +158,13 @@ const LandingPage = () => {
                 <div className="pt-4 space-y-2">
                   <button
                     className="w-full px-3 py-2 text-blue-600 border-2 border-blue-600 rounded-lg hover:bg-blue-50"
-                    onClick={() => navigate('/signin')}
+                    onClick={() => handleAuth('signin')}
                   >
                     Sign In
                   </button>
                   <button
                     className="w-full px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                    onClick={() => navigate('/signup')}
+                    onClick={() => handleAuth('signup')}
                   >
                     Get Started
                   </button>
@@ -504,8 +512,17 @@ const LandingPage = () => {
           </div>
         </div>
       </footer>
+
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        initialMode={authMode}
+      />
     </div>
   );
 };
 
 export default LandingPage;
+
+export default LandingPage
